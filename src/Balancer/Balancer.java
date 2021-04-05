@@ -24,6 +24,7 @@ public class Balancer {
         Lexer lexer = new Lexer(unbalanced);
         List<Token> tokens = lexer.getTokens();
         for (Token token: tokens) {
+            token.parse();
             System.out.println(token);
         }
     }
