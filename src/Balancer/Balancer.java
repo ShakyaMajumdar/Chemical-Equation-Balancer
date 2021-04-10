@@ -35,15 +35,21 @@ public class Balancer {
         int[][] equationCoefficients = new int[n][n];
         int[] rhs = new int[n];
 
+        Set<List<Integer>> existingCoefficients = new HashSet<>();
         for (int i = 0; i < elementList.size(); i++) {
             String element = elementList.get(i);
+            int[] newCoefficients = new int[n];
 
             for (int j = 0; j < tokens.size() - 1; j++) {
                 Token token = tokens.get(j + 1);
-                int coefficient = ((token.tokenType == TokenType.PRODUCT) ? -1 : 1) * token.components.getOrDefault(element, 0);
-                equationCoefficients[i][j] = coefficient;
+                newCoefficients[j] = ((token.tokenType == TokenType.PRODUCT) ? -1 : 1) * token.components.getOrDefault(element, 0);
             }
 
+            if (existingCoefficients.contains(Arrays.stream(simplify(newCoefficients)).boxed().collect(Collectors.toList()))) {
+                continue;
+            }
+            existingCoefficients.add(Arrays.stream(simplify(newCoefficients)).boxed().collect(Collectors.toList()));
+            equationCoefficients[i] = newCoefficients;
             rhs[i] = -1 * tokens.get(0).components.getOrDefault(element, 0);
         }
 
@@ -131,6 +137,8 @@ public class Balancer {
     }
 
     private static int gcd(int a, int b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
         int l = Math.min(a, b);
         int g = Math.max(a, b);
         if (l == 0) {
