@@ -61,7 +61,7 @@ public class Balancer {
         System.arraycopy(solveEquations(equationCoefficients, rhs), 0, coefficients, 1, n);
         coefficients = simplify(coefficients);
         for (int i = 0; i < tokens.size(); i++) {
-            tokens.get(i).coefficient = coefficients[i];
+            tokens.get(i).coefficient = Math.abs(coefficients[i]);
         }
 
         System.out.println(equationString(tokens));
