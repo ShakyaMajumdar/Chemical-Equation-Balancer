@@ -21,7 +21,7 @@ class Token {
     }
 
     public String toString() {
-        return coefficient + " " + substance + " " + components + " " + literal + " " + tokenType;
+        return (coefficient == 1 ? "" : coefficient) + "" + substance;
     }
 
     public void parse() {
@@ -36,7 +36,7 @@ class Token {
         }
 
         StringBuilder element = new StringBuilder();
-        int multiplier = coefficient;
+        int multiplier = 1;
         for (int i = 0; i < substance.length(); i++) {
             if (i == substance.length() - 1 ||
                     (Character.isAlphabetic(substance.charAt(i)) && Character.isUpperCase(substance.charAt(i + 1))) ||
@@ -50,7 +50,7 @@ class Token {
             } else if (substance.charAt(i) == '(') {
                 multiplier *= substance.charAt(substance.indexOf(')', i) + 1) - 48;
             } else if (substance.charAt(i) == ')') {
-                multiplier = coefficient;
+                multiplier = 1;
                 i++;
             } else {
                 element.append(substance.charAt(i));
