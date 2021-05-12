@@ -36,6 +36,7 @@ public class Balancer {
         int[] rhs = new int[n];
 
         Set<List<Integer>> existingCoefficients = new HashSet<>();
+        int f = 0;
         for (int i = 0; i < elementList.size(); i++) {
             String element = elementList.get(i);
             int[] newCoefficients = new int[n];
@@ -46,11 +47,12 @@ public class Balancer {
             }
 
             if (existingCoefficients.contains(Arrays.stream(simplify(newCoefficients)).boxed().collect(Collectors.toList()))) {
+                f++;
                 continue;
             }
             existingCoefficients.add(Arrays.stream(simplify(newCoefficients)).boxed().collect(Collectors.toList()));
-            equationCoefficients[i] = newCoefficients;
-            rhs[i] = -1 * tokens.get(0).components.getOrDefault(element, 0);
+            equationCoefficients[i - f] = newCoefficients;
+            rhs[i - f] = -1 * tokens.get(0).components.getOrDefault(element, 0);
         }
 
         tokens.get(0).coefficient = det(equationCoefficients);
