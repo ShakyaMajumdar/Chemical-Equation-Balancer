@@ -18,7 +18,12 @@ public class Balancer {
             if (line == null) {
                 break;
             }
-            balance(line);
+            try {
+                balance(line);
+            }
+            catch (Exception e) {
+                System.out.println("Could not balance");
+            }
         }
     }
 
