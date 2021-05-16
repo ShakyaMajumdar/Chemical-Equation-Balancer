@@ -160,7 +160,7 @@ public class Balancer {
                 .filter(x -> x.tokenType == TokenType.REACTANT)
                 .map(x -> x.toString())
                 .collect(Collectors.joining(" + "))
-                + " -> " +
+                + " → " +
                 tokens
                 .stream()
                 .filter(x -> x.tokenType == TokenType.PRODUCT)
