@@ -55,6 +55,9 @@ public class Balancer {
                 f++;
                 continue;
             }
+            if (i - f >= n) {
+                break;
+            }
             existingCoefficients.add(Arrays.stream(simplify(newCoefficients)).boxed().collect(Collectors.toList()));
             equationCoefficients[i - f] = newCoefficients;
             rhs[i - f] = -1 * tokens.get(0).components.getOrDefault(element, 0);
