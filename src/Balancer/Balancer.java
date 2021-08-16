@@ -11,7 +11,7 @@ public class Balancer {
     public static void main(String[] args) throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
-
+        boolean isPrettyOutput = args.length == 1 && args[0].equals("--pretty");
         for (; ; ) {
             System.out.print(">> ");
             String line = reader.readLine();
@@ -19,7 +19,7 @@ public class Balancer {
                 break;
             }
             try {
-                balance(line);
+                balance(line, isPrettyOutput);
             }
             catch (Exception e) {
                 System.out.println("Could not balance");
@@ -27,7 +27,7 @@ public class Balancer {
         }
     }
 
-    private static void balance(String unbalanced) {
+    private static void balance(String unbalanced, boolean isPrettyOutput) {
         Lexer lexer = new Lexer(unbalanced);
         List<Token> tokens = lexer.getTokens();
         tokens.forEach(x -> x.parse());
@@ -74,7 +74,7 @@ public class Balancer {
             tokens.get(i).coefficient = Math.abs(coefficients[i]);
         }
 
-        System.out.println(equationString(tokens));
+        System.out.println(equationString(tokens, isPrettyOutput));
     }
 
     private static boolean isBalanced(List<Token> tokens) {
@@ -157,17 +157,17 @@ public class Balancer {
         return gcd(g % l, l);
     }
 
-    private static String equationString(List<Token> tokens) {
+    private static String equationString(List<Token> tokens, boolean isPrettyOutput) {
         return tokens
                 .stream()
                 .filter(x -> x.tokenType == TokenType.REACTANT)
-                .map(x -> x.toString())
+                .map(x -> x.toString(isPrettyOutput))
                 .collect(Collectors.joining(" + "))
-                + " → " +
+                + (isPrettyOutput ? " → " : " -> ") +
                 tokens
                 .stream()
                 .filter(x -> x.tokenType == TokenType.PRODUCT)
-                .map(x -> x.toString())
+                .map(x -> x.toString(isPrettyOutput))
                 .collect(Collectors.joining(" + "));
     }
 }

@@ -20,10 +20,12 @@ class Token {
         this.tokenType = tokenType;
     }
 
-    public String toString() {
+    public String toString(boolean isPrettyOutput) {
         char[] subscriptChars = {'₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'};
-        for (int i = 2; i <= 9; i++) {
-            substance = substance.replace((char)(i+48), subscriptChars[i]);
+        if (isPrettyOutput) {
+            for (int i = 2; i <= 9; i++) {
+                substance = substance.replace((char) (i + 48), subscriptChars[i]);
+            }
         }
         return (coefficient == 1 ? "" : coefficient) + "" + substance;
     }
