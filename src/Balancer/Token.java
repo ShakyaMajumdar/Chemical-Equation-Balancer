@@ -6,39 +6,32 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Token {
-    TokenType tokenType; //reactant or product
-
-    String literal;
     String substance;
 
     int coefficient;
 
-    Map<String, Integer> components = new HashMap<>();
+    Map<String, Integer> components;
 
-    Token(String literal, TokenType tokenType) {
-        this.literal = literal;
-        this.tokenType = tokenType;
+    public Token(String substance, int coefficient, Map<String, Integer> components) {
+        this.substance = substance;
+        this.coefficient = coefficient;
+        this.components = components;
     }
 
-    public String toString(boolean isPrettyOutput) {
-        char[] subscriptChars = {'₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'};
-        if (isPrettyOutput) {
-            for (int i = 2; i <= 9; i++) {
-                substance = substance.replace((char) (i + 48), subscriptChars[i]);
-            }
-        }
-        return (coefficient == 1 ? "" : coefficient) + "" + substance;
-    }
+    public static Token parseFrom(String token) {
+        String substance;
+        int coefficient;
+        Map<String, Integer> components = new HashMap<>();
 
-    public void parse() {
+        if (!Character.isDigit(token.charAt(0)))
+            token = 1 + token;
 
-        if (!Character.isDigit(literal.charAt(0)))
-            literal = 1 + literal;
-
-        Matcher startsWithNumberMatcher = Pattern.compile("^\\d+").matcher(literal);
+        Matcher startsWithNumberMatcher = Pattern.compile("^\\d+").matcher(token);
         if (startsWithNumberMatcher.find()) {
             coefficient = Integer.parseInt(startsWithNumberMatcher.group(0));
-            substance = literal.substring(startsWithNumberMatcher.end());
+            substance = token.substring(startsWithNumberMatcher.end());
+        } else {
+            throw new AssertionError("unreachable");
         }
 
         StringBuilder element = new StringBuilder();
@@ -51,7 +44,7 @@ class Token {
                     substance.charAt(i + 1) == ')'
             ) {
                 element.append(substance.charAt(i));
-                addElement(element.toString(), multiplier);
+                addElement(components, element.toString(), multiplier);
                 element = new StringBuilder();
             } else if (substance.charAt(i) == '(') {
                 multiplier *= substance.charAt(substance.indexOf(')', i) + 1) - 48;
@@ -63,9 +56,14 @@ class Token {
             }
 
         }
+        return new Token(substance, coefficient, components);
     }
 
-    private void addElement(String element, int multiplier) {
+    public String toString() {
+        return (coefficient == 1 ? "" : coefficient) + "" + substance;
+    }
+
+    private static void addElement(Map<String, Integer> components, String element, int multiplier) {
         if (element.equals(""))
             return;
 
