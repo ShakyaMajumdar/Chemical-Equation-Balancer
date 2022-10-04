@@ -18,10 +18,8 @@ public class Balancer {
                 Equation equation = Equation.parseFrom(line);
                 equation.balance();
                 System.out.println(equation);
-            } catch (ParsingException e) {
-                System.out.println("Could not parse");
-            } catch (BalancingException e) {
-                System.out.println("Could not balance");
+            } catch (ParsingException | BalancingException e) {
+                System.err.println(e.getMessage());
             }
         }
     }
